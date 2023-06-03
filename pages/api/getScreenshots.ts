@@ -1,7 +1,8 @@
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
 
-const ARCHIVES_DIRECTORY = "./archives/";
+const ARCHIVES_DIRECTORY = path.join(process.cwd(), "/public/");
 
 type Data = {
   data: object[];
@@ -15,10 +16,20 @@ export default function handler(
     if (err) {
       console.log(err);
     } else {
-      const fileContents: object[] = [];
+      const jsonFiles: string[] = [];
 
       files.forEach((file) => {
-        const filePath = ARCHIVES_DIRECTORY + file;
+        const filePath = path.join(ARCHIVES_DIRECTORY, file);
+        const fileExtension = path.extname(file);
+
+        if (fileExtension === ".json") {
+          jsonFiles.push(filePath);
+        }
+      });
+
+      const fileContents: object[] = [];
+
+      jsonFiles.forEach((filePath) => {
         fs.readFile(filePath, "utf8", (err, data) => {
           if (err) {
             console.log(err);
@@ -27,11 +38,11 @@ export default function handler(
               const parsedData = JSON.parse(data);
               fileContents.push(parsedData);
 
-              if (fileContents.length === files.length) {
+              if (fileContents.length === jsonFiles.length) {
                 res.status(200).json({ data: fileContents });
               }
             } catch (error) {
-              console.log(`Error parsing JSON in file ${file}: ${error}`);
+              console.log(`Error parsing JSON in file ${filePath}: ${error}`);
             }
           }
         });
