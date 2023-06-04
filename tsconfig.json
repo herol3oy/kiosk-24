@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/archive.js", "firebase.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/archive.js", "firebase.ts"],
   "exclude": ["node_modules"]
 }

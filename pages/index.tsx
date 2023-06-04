@@ -1,12 +1,21 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { getPublicId } from "@cloudinary-util/util";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { firestore } from "@/firebase";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
+const TODAY_DATE = new Date().toISOString().split("T")[0];
+
+export enum NewsAgency {
+  WYBORCZA = "wyborcza.pl",
+  RADIO_FARDA = "radiofarda.com",
+  THEGUARDIAN = "theguardian.com",
+}
 
 export interface Screenshot {
+  id: string;
   url: string;
   date: Date;
   image: Image;
@@ -25,43 +34,94 @@ const cld = new Cloudinary({
 });
 
 export default function Home() {
-  const [data, setData] = useState<Screenshot[]>([]);
+  const [date, setDate] = useState<string>(TODAY_DATE);
+  const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
+  const [newsAgency, setNewsAgency] = useState<string>(NewsAgency.RADIO_FARDA);
 
-  useEffect(() => {
-    const requestFiles = async () => {
-      const files = await fetch("/api/getScreenshots");
-      const { data } = await files.json();
-      setData(data);
-    };
+  const getScreenshots = async () => {
+    const q = query(
+      collection(firestore, newsAgency),
+      where("date", ">=", `${date}T00:00:00.000Z`),
+      where("date", "<=", `${date}T23:59:59.999Z`)
+    );
 
-    requestFiles();
-  }, []);
+    const querySnapshot = await getDocs(q);
+    const screenshotData: any = [];
+    querySnapshot.forEach((doc) => {
+      screenshotData.push(doc.data());
+    });
+    setScreenshots(screenshotData);
+  };
 
   return (
     <>
-      <ul className="grid gap-4 grid-cols-12 ">
-        {data.map((archive) => {
+      <div>
+        <label htmlFor="date">Date:</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          onChange={(e) => {
+            const selectedDate = e.target.valueAsDate;
+            const formattedDate = selectedDate?.toISOString().split("T")[0];
+            setDate(formattedDate || "");
+          }}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="agency">Choose a news agency:</label>
+        <select id="agency" onChange={(e) => setNewsAgency(e.target.value)}>
+          {Object.values(NewsAgency).map((agency) => (
+            <option key={agency} value={agency}>
+              {agency}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <button onClick={() => getScreenshots()}>Get screenshots</button>
+
+      <ul className="grid gap-4 grid-cols-12">
+        {screenshots.map((image: Screenshot) => {
+          const date = new Date(image.date);
+
+          const hours = date.getUTCHours();
+          const minutes = date.getUTCMinutes();
+
+          const humanReadableFormat = `${hours < 10 ? "0" + hours : hours}:${
+            minutes < 10 ? "0" + minutes : minutes
+          }`;
+
+          console.log(image.date);
           const width = 800;
           const height = 600;
-          const publicId = getPublicId(archive.image.url);
+          const publicId = getPublicId(image.image.url);
           const url = cld
             .image(publicId)
             .format("auto")
             .quality("auto")
             .addTransformation(`w_${width},h_${height},c_fill,g_north`)
             .toURL();
+
           return (
-            <li key={archive.image.url}>
-              <a href={archive.image.url}>
-                <Image width={width} height={height} src={url} alt="Screenshot" />
-              </a>
-              <p>{new Date(archive.date).toLocaleString()}</p>
-            </li>
+            <div key={image.id}>
+              <div>
+                <Link href={image.image.url}>
+                  <Image
+                    width={width}
+                    height={height}
+                    src={url}
+                    alt="Screenshot"
+                  />
+                </Link>
+
+                <small>{humanReadableFormat}</small>
+              </div>
+            </div>
           );
         })}
       </ul>
     </>
   );
 }
-
-
