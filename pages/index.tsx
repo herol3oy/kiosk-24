@@ -93,7 +93,6 @@ export default function Home() {
             minutes < 10 ? "0" + minutes : minutes
           }`;
 
-          console.log(image.date);
           const width = 800;
           const height = 600;
           const publicId = getPublicId(image.image.url);

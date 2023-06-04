@@ -64,6 +64,8 @@ async function takeScreenshot(url) {
     },
   };
 
+  console.log({ [url]: new URL(url).hostname });
+
   await addDoc(collection(firestore, new URL(url).hostname), archive);
 
   await fs.unlink(screenshotPath);
