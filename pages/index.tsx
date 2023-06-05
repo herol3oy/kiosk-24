@@ -1,55 +1,20 @@
-import Image from "next/image";
-import { useState } from "react";
-import { Cloudinary } from "@cloudinary/url-gen";
+import { NewsAgency } from "@/types/news-agency";
+import { Screenshot } from "@/types/screenshot";
+import { cloudinary } from "@/utils/cloudinary";
+import { requestScreenshots } from "@/utils/requestScreenshots";
+import { TODAY_DATE } from "@/utils/today-date";
 import { getPublicId } from "@cloudinary-util/util";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { firestore } from "@/firebase";
+import Image from "next/image";
 import Link from "next/link";
-
-const TODAY_DATE = new Date().toISOString().split("T")[0];
-
-export enum NewsAgency {
-  WYBORCZA = "wyborcza.pl",
-  RADIO_FARDA = "radiofarda.com",
-  THEGUARDIAN = "theguardian.com",
-}
-
-export interface Screenshot {
-  id: string;
-  url: string;
-  date: Date;
-  image: Image;
-}
-
-export interface Image {
-  url: string;
-  width: number;
-  height: number;
-}
-
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  },
-});
+import { useState } from "react";
 
 export default function Home() {
   const [date, setDate] = useState<string>(TODAY_DATE);
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
-  const [newsAgency, setNewsAgency] = useState<string>(NewsAgency.RADIO_FARDA);
+  const [newsAgency, setNewsAgency] = useState<string>(NewsAgency.WYBORCZA);
 
   const getScreenshots = async () => {
-    const q = query(
-      collection(firestore, newsAgency),
-      where("date", ">=", `${date}T00:00:00.000Z`),
-      where("date", "<=", `${date}T23:59:59.999Z`)
-    );
-
-    const querySnapshot = await getDocs(q);
-    const screenshotData: any = [];
-    querySnapshot.forEach((doc) => {
-      screenshotData.push(doc.data());
-    });
+    const screenshotData = await requestScreenshots(date, newsAgency);
     setScreenshots(screenshotData);
   };
 
@@ -58,6 +23,7 @@ export default function Home() {
       <div>
         <label htmlFor="date">Date:</label>
         <input
+          defaultValue={TODAY_DATE}
           type="date"
           id="date"
           name="date"
@@ -96,7 +62,7 @@ export default function Home() {
           const width = 800;
           const height = 600;
           const publicId = getPublicId(image.image.url);
-          const url = cld
+          const url = cloudinary
             .image(publicId)
             .format("auto")
             .quality("auto")
