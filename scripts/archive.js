@@ -5,6 +5,8 @@ const NEWS_AGENCY_URLS = require("./news-agency-urls");
 const firestore = require("./firebase");
 const cloudinary = require("./cloudinary");
 
+const FOLDER_NAME = 'kiosk-24-pl-image-archives'
+
 async function processTakingScreenshot(url) {
   const date = new Date(Date.now());
   const screenshotPath = `./${date.toISOString()}.jpeg`;
@@ -23,7 +25,7 @@ const writeScreenshotDatainFirestore = async (url, archive) => {
 
 const uploadToCloudinary = async (url, screenshotPath) => {
   const results = await cloudinary.uploader.upload(screenshotPath, {
-    folder: "kiosk-15-app-image-archive",
+    folder: FOLDER_NAME,
   });
 
   const archive = {
@@ -49,7 +51,7 @@ const takeScreenshot = async (url, screenshotPath) => {
     path: screenshotPath,
     fullPage: true,
     type: "jpeg",
-    quality: 75,
+    quality: 85,
   });
 
   await browser.close();
