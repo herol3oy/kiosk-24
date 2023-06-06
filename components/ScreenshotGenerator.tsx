@@ -3,6 +3,7 @@ import { TODAY_DATE } from "@/utils/today-date";
 import { Dispatch, SetStateAction } from "react";
 import { Screenshot } from "@/types/screenshot";
 import NEWS_AGENCY_URLS from "@/scripts/news-agency-urls";
+import { formatUrl } from "@/utils/formatUrl";
 
 export type ScreenshotGeneratorType = {
   setNewsAgencyDate: Dispatch<SetStateAction<string>>;
@@ -57,8 +58,8 @@ const ScreenshotGenerator = ({
           onChange={(e) => setNewsAgency(e.target.value)}
         >
           {Object.entries(NEWS_AGENCY_URLS).map(([agency, url]) => (
-            <option key={agency} value={url}>
-              {url}
+            <option key={agency} value={formatUrl(url)}>
+              {formatUrl(url)}
             </option>
           ))}
         </select>

@@ -3,6 +3,7 @@ import NEWS_AGENCY_URLS from "@/scripts/news-agency-urls";
 import { Screenshot } from "@/types/screenshot";
 import { TODAY_DATE } from "@/utils/today-date";
 import { useState } from "react";
+import { formatUrl } from "@/utils/formatUrl";
 
 export default function Home() {
   const [firstNewsAgencyDate, setFirstNewsAgencyDate] =
@@ -12,10 +13,10 @@ export default function Home() {
   const [firstScreenshots, setFirstScreenshots] = useState<Screenshot[]>([]);
   const [secondScreenshots, setSecondScreenshots] = useState<Screenshot[]>([]);
   const [firstNewsAgency, setFirsNewsAgency] = useState<string>(
-    NEWS_AGENCY_URLS.WYBORCZA
+    formatUrl(NEWS_AGENCY_URLS.WYBORCZA)
   );
   const [secondNewsAgency, setSecondNewsAgency] = useState<string>(
-    NEWS_AGENCY_URLS.WYBORCZA
+    formatUrl(NEWS_AGENCY_URLS.WYBORCZA)
   );
   const [firstScreenshotUrl, setFirstScreenshotUrl] = useState<string>("");
   const [secondScreenshotUrl, setSecondScreenshotUrl] = useState<string>("");

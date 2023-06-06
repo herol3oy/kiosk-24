@@ -1,6 +1,5 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { Screenshot } from "@/types/screenshot";
 
 export const requestScreenshots = async (date: string, newsAgency: string) => {
   const q = query(
