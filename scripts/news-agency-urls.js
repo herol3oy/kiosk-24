@@ -4,9 +4,9 @@ const NEWS_AGENCY_URLS = {
   INTERIA: "https://interia.pl",
   OKO: "https://oko.press",
   PAP: "https://pap.pl",
-  POLITYKA: "https://polityka.pl",
-  ANSA: "https://ansa.it",
-  THEGUARDIAN: "https://theguardian.com",
+  // POLITYKA: "https://polityka.pl",
+  // ANSA: "https://ansa.it",
+  // THEGUARDIAN: "https://theguardian.com",
 };
 
 module.exports = NEWS_AGENCY_URLS;
