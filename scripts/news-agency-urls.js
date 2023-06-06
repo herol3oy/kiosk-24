@@ -7,7 +7,6 @@ const NEWS_AGENCY_URLS = {
   POLITYKA: "https://polityka.pl",
   ANSA: "https://ansa.it",
   THEGUARDIAN: "https://theguardian.com",
-  AFP: "https://afp.com",
 };
 
 module.exports = NEWS_AGENCY_URLS;
