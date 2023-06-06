@@ -50,8 +50,6 @@ const takeScreenshot = async (url, screenshotPath) => {
   await page.screenshot({
     path: screenshotPath,
     fullPage: true,
-    type: "jpeg",
-    quality: 85,
   });
 
   await browser.close();
