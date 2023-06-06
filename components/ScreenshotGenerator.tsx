@@ -5,6 +5,8 @@ import { Screenshot } from "@/types/screenshot";
 import NEWS_AGENCY_URLS from "@/scripts/news-agency-urls";
 import { formatUrl } from "@/utils/formatUrl";
 
+const APP_LAUNCH_DATE = "2023-06-06";
+
 export type ScreenshotGeneratorType = {
   setNewsAgencyDate: Dispatch<SetStateAction<string>>;
   newsAgencyDate: string;
@@ -35,6 +37,7 @@ const ScreenshotGenerator = ({
           className="block appearance-none bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           defaultValue={TODAY_DATE}
           type="date"
+          min={APP_LAUNCH_DATE}
           id="date"
           name="date"
           onChange={(e) => {

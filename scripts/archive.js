@@ -5,7 +5,7 @@ const NEWS_AGENCY_URLS = require("./news-agency-urls");
 const firestore = require("./firebase");
 const cloudinary = require("./cloudinary");
 
-const FOLDER_NAME = 'kiosk-24-pl-image-archives'
+const CLOUDINARY_FOLDER_NAME = "kiosk-24-pl-image-archives";
 
 async function processTakingScreenshot(url) {
   const date = new Date(Date.now());
@@ -25,7 +25,7 @@ const writeScreenshotDatainFirestore = async (url, archive) => {
 
 const uploadToCloudinary = async (url, screenshotPath) => {
   const results = await cloudinary.uploader.upload(screenshotPath, {
-    folder: FOLDER_NAME,
+    folder: CLOUDINARY_FOLDER_NAME,
   });
 
   const archive = {
@@ -57,7 +57,6 @@ const takeScreenshot = async (url, screenshotPath) => {
 
 const runScreenshotProcess = async () => {
   for (const url of Object.values(NEWS_AGENCY_URLS)) {
-    console.log
     await processTakingScreenshot(url);
   }
 };
