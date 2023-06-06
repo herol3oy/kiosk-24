@@ -10,4 +10,6 @@ export type NewsSectionType = {
   newsAgency: string;
   setScreenshotUrl: Dispatch<SetStateAction<string>>;
   screenshotUrl: string;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 };

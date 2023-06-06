@@ -56,7 +56,7 @@ const takeScreenshot = async (url, screenshotPath) => {
 };
 
 const runScreenshotProcess = async () => {
-  for (const url of NEWS_AGENCY_URLS) {
+  for (const url of Object.values(NEWS_AGENCY_URLS)) {
     await processTakingScreenshot(url);
   }
 };
