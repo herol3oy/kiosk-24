@@ -9,4 +9,4 @@ Image archive of the news website - the app is taking a full screenshot from Pol
 - Cloudinary
 - Github Actions
 
-<img src="./public/screenshots/kiosk-24-diagram.png" width="1920">
+<img src="./kiosk-24-diagram.png" width="1920">
